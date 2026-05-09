@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifica Esenzione ENPALS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-mid: #1a3358;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --cream: #f7f3ec;
+  --cream-dark: #ede8df;
+  --green: #2d6a4f;
+  --green-light: #d8f0e7;
+  --red: #8b1a1a;
+  --red-light: #fde8e8;
+  --amber: #7a4f00;
+  --amber-light: #fdf3dc;
+  --text: #1a1a2e;
+  --text-muted: #5a6070;
+  --white: #ffffff;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* HEADER */
+.header {
+  background: var(--navy);
+  padding: 1.5rem 1.25rem 1.25rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.08);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.06);
+}
+.header-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  color: var(--white);
+  font-size: 1.6rem;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+.header-sub {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+  font-weight: 300;
+}
+.gold-line {
+  width: 40px; height: 2px;
+  background: var(--gold);
+  margin: 0.75rem auto 0;
+  border-radius: 2px;
+}
+
+/* PROGRESS */
+.progress-wrap {
+  background: var(--navy-mid);
+  padding: 0.75rem 1.25rem;
+  display: flex; align-items: center; gap: 12px;
+}
+.progress-bar {
+  flex: 1; height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.progress-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* CONTENT */
+.content {
+  padding: 1.5rem 1.25rem 3rem;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* STEPS */
+.step { display: none; animation: fadeUp 0.3s ease; }
+.step.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-num {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.step-question {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--navy);
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
+}
+.step-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* CHOICES */
+.choices { display: flex; flex-direction: column; gap: 8px; }
+.choice {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 15px;
+  background: var(--white);
+  border: 1.5px solid var(--cream-dark);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  text-align: left;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.choice:active { transform: scale(0.98); }
+.choice.selected {
+  border-color: var(--navy);
+  background: #eef2f8;
+}
+.choice-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.choice-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+.choice-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 300;
+  margin-top: 1px;
+}
+.check-circle {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cream-dark);
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.choice.selected .check-circle {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.check-circle::after {
+  content: '';
+  display: none;
+  width: 5px; height: 9px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.choice.selected .check-circle::after { display: block; }
+
+/* NAV */
+.nav {
+  display: flex; justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+.btn {
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary {
+  background: var(--navy);
+  color: var(--white);
+}
+.btn-primary:hover { background: var(--navy-mid); }
+.btn-primary:disabled { background: var(--cream-dark); color: var(--text-muted); cursor: not-allowed; }
+.btn-primary:not(:disabled):active { transform: scale(0.97); }
+
+/* RESULT CARD */
+.result-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cream-dark);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.result-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 0.9rem;
+}
+.badge-esente { background: var(--green-light); color: var(--green); }
+.badge-verifica { background: var(--amber-light); color: var(--amber); }
+.badge-obbligo { background: var(--red-light); color: var(--red); }
+
+.result-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.result-body {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--cream-dark);
+  margin: 1rem 0;
+}
+
+.summary-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-top: 1px solid var(--cream-dark);
+  font-size: 13px;
+}
+.summary-key { color: var(--text-muted); font-weight: 300; }
+.summary-val { font-weight: 500; color: var(--text); }
+
+.adempimento {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--cream-dark);
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+  font-weight: 300;
+}
+.adot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.adot-green { background: var(--green); }
+.adot-red { background: var(--red); }
+.adot-amber { background: #c47d0e; }
+
+.warn-box {
+  background: var(--amber-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-top: 1rem;
+  font-size: 13px;
+  color: var(--amber);
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+.btn-restart {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1.5px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s;
+}
+.btn-restart:hover { background: var(--cream-dark); }
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 1rem 1.25rem 2rem;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-weight: 300;
+  border-top: 1px solid var(--cream-dark);
+}
+.footer strong { font-weight: 500; color: var(--navy); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="currentColor"/><path d="M5 3v2.5L6.5 7" stroke="currentColor" stroke-linecap="round"/></svg>
+    Verifica obblighi previdenziali
+  </div>
+  <div class="header-title">Esenzione ENPALS<br>per artisti e tecnici</div>
+  <div class="header-sub">Art. 1 comma 188 — L. 296/2006</div>
+  <div class="gold-line"></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="progress-label" id="prog-label">0 / 5</div>
+</div>
+
+<div class="content">
+
+  <!-- STEP 0 -->
+  <div class="step active" id="s0">
+    <div class="step-num">Domanda 1 di 5</div>
+    <div class="step-question">Che tipo di prestazione svolgi in questo evento?</div>
+    <div class="step-hint">Indica il tuo ruolo principale nell'ambito dello spettacolo.</div>
+    <div class="choices">
+      <button class="choice" onclick="pick(this,'tipo','musicista')">
+        <div class="choice-icon" style="background:#eef5e8;">🎵</div>
+        <div><div class="choice-label">Musicista / cantante / corista</div><div class="choice-sub">Esibizione musicale dal vivo</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'tipo','tecnico')">
+        <div class="choice-icon" style="background:#e8f0f9;">🔧</div>
+        <div><div class="choice-label">Tecnico (audio, luci, scena)</div><div class="choice-sub">Service, fonico, operatore</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'tipo','direttore')">
+        <div class="choice-icon" style="background:#f3eefa;">🎼</div>
+        <div><div class="choice-label">Direttore d'orchestra / concertatore</div><div class="choice-sub">Direzione artistica</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'tipo','altro')">
+        <div class="choice-icon" style="background:#f5f0e8;">📋</div>
+        <div><div class="choice-label">Altra figura dello spettacolo</div><div class="choice-sub">Presentatore, animatore, ecc.</div></div>
+        <div class="check-circle"></div>
+      </button>
+    </div>
+    <div class="nav"><button class="btn btn-primary" id="n0" onclick="next(0)" disabled>Avanti</button></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step" id="s1">
+    <div class="step-num">Domanda 2 di 5</div>
+    <div class="step-question">Hai un'altra attività con contributi versati a una cassa diversa dall'ENPALS?</div>
+    <div class="step-hint">Es: dipendente pubblico/privato (INPS, INPDAP), libero professionista con cassa propria (INARCASSA, cassa forense, ecc.).</div>
+    <div class="choices">
+      <button class="choice" onclick="pick(this,'altra_cassa','si')">
+        <div class="choice-icon" style="background:#eef5e8;">✅</div>
+        <div><div class="choice-label">Sì</div><div class="choice-sub">Ho un'altra posizione previdenziale attiva</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'altra_cassa','no')">
+        <div class="choice-icon" style="background:#fdeaea;">❌</div>
+        <div><div class="choice-label">No</div><div class="choice-sub">Lo spettacolo è la mia unica attività</div></div>
+        <div class="check-circle"></div>
+      </button>
+    </div>
+    <div class="nav"><button class="btn btn-primary" id="n1" onclick="next(1)" disabled>Avanti</button></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="s2">
+    <div class="step-num">Domanda 3 di 5</div>
+    <div class="step-question">Qual è il tuo compenso annuo totale da attività artistiche nell'anno in corso?</div>
+    <div class="step-hint">Somma tutti i compensi da concerti ed eventi ricevuti quest'anno solare, da qualsiasi committente.</div>
+    <div class="choices">
+      <button class="choice" onclick="pick(this,'reddito','sotto')">
+        <div class="choice-icon" style="background:#eef5e8;">💶</div>
+        <div><div class="choice-label">Fino a 5.000 € lordi</div><div class="choice-sub">Non ho ancora superato la soglia annua</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'reddito','sopra')">
+        <div class="choice-icon" style="background:#fdeaea;">💶</div>
+        <div><div class="choice-label">Oltre 5.000 € lordi</div><div class="choice-sub">Ho già superato o supererò la soglia</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'reddito','incerto')">
+        <div class="choice-icon" style="background:#fdf6e3;">💶</div>
+        <div><div class="choice-label">Non sono sicuro/a</div><div class="choice-sub">Devo verificare il totale dei compensi</div></div>
+        <div class="check-circle"></div>
+      </button>
+    </div>
+    <div class="nav"><button class="btn btn-primary" id="n2" onclick="next(2)" disabled>Avanti</button></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="s3">
+    <div class="step-num">Domanda 4 di 5</div>
+    <div class="step-question">Qual è la tua fascia anagrafica?</div>
+    <div class="step-hint">Alcune categorie hanno diritto all'esenzione indipendentemente da altri requisiti.</div>
+    <div class="choices">
+      <button class="choice" onclick="pick(this,'eta','under18')">
+        <div class="choice-icon" style="background:#f3eefa;">🧒</div>
+        <div><div class="choice-label">Meno di 18 anni</div><div class="choice-sub">Minorenne</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'eta','18_25')">
+        <div class="choice-icon" style="background:#e8f0f9;">🎓</div>
+        <div><div class="choice-label">18–25 anni e studente</div><div class="choice-sub">Iscritto a scuola o università</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'eta','25_65')">
+        <div class="choice-icon" style="background:#f5f0e8;">👤</div>
+        <div><div class="choice-label">26–64 anni</div><div class="choice-sub">Fascia lavorativa standard</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'eta','over65')">
+        <div class="choice-icon" style="background:#fdf6e3;">👴</div>
+        <div><div class="choice-label">65 anni o più e pensionato/a</div><div class="choice-sub">Percettore di pensione</div></div>
+        <div class="check-circle"></div>
+      </button>
+    </div>
+    <div class="nav"><button class="btn btn-primary" id="n3" onclick="next(3)" disabled>Avanti</button></div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="s4">
+    <div class="step-num">Domanda 5 di 5</div>
+    <div class="step-question">Hai già consegnato la dichiarazione di esenzione scritta all'organizzatore?</div>
+    <div class="step-hint">La dichiarazione ex art. 1 comma 188 L. 296/2006 deve essere firmata e consegnata prima dell'esibizione. L'organizzatore è tenuto a custodirla.</div>
+    <div class="choices">
+      <button class="choice" onclick="pick(this,'dichiarazione','si')">
+        <div class="choice-icon" style="background:#eef5e8;">📝</div>
+        <div><div class="choice-label">Sì, l'ho già consegnata</div><div class="choice-sub">Il committente la custodisce</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'dichiarazione','no')">
+        <div class="choice-icon" style="background:#fdeaea;">📝</div>
+        <div><div class="choice-label">No, non ancora</div><div class="choice-sub">Devo ancora firmarla</div></div>
+        <div class="check-circle"></div>
+      </button>
+      <button class="choice" onclick="pick(this,'dichiarazione','na')">
+        <div class="choice-icon" style="background:#f5f0e8;">📝</div>
+        <div><div class="choice-label">Non applicabile</div><div class="choice-sub">Non sono nella categoria esente</div></div>
+        <div class="check-circle"></div>
+      </button>
+    </div>
+    <div class="nav"><button class="btn btn-primary" id="n4" onclick="showResult()" disabled>Vedi il risultato</button></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="step" id="sResult">
+    <div id="resultContent"></div>
+    <button class="btn-restart" onclick="restart()">↺ Ricomincia il questionario</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  Strumento informativo a uso interno — <strong>Non sostituisce consulenza legale</strong><br>
+  Riferimento normativo: D.Lgs. 708/1947 · L. 296/2006 art. 1 c. 188 · D.M. 15/03/2005
+</div>
+
+<script>
+const A = {};
+
+function pick(btn, key, val) {
+  btn.closest('.choices').querySelectorAll('.choice').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  A[key] = val;
+  const si = parseInt(btn.closest('.step').id.replace('s',''));
+  const nb = document.getElementById('n' + si);
+  if (nb) nb.disabled = false;
+}
+
+function next(from) {
+  document.getElementById('s'+from).classList.remove('active');
+  let to = from + 1;
+  if (from === 0 && A.tipo === 'tecnico') {
+    A.altra_cassa = '-'; A.reddito = '-'; A.eta = '-';
+    to = 4;
+  }
+  document.getElementById('s'+to).classList.add('active');
+  updateProg(to);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateProg(step) {
+  const pct = Math.round((step / 5) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = step + ' / 5';
+}
+
+function showResult() {
+  document.getElementById('s4').classList.remove('active');
+  document.getElementById('sResult').classList.add('active');
+  updateProg(5);
+  document.getElementById('resultContent').innerHTML = buildResult();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function buildResult() {
+  const {tipo, altra_cassa, reddito, eta, dichiarazione} = A;
+  let esente = false, parziale = false, motivazione = '', adempimenti = [], warn = '';
+
+  if (tipo === 'tecnico') {
+    motivazione = 'I tecnici audio, luci e scena non rientrano nell\'esenzione ex comma 188, che si applica esclusivamente alle esibizioni musicali dal vivo. L\'obbligo contributivo ENPALS è sempre pieno, indipendentemente dall\'età o dall\'importo del compenso.';
+    adempimenti = [
+      {d:'red', t:'Agibilità INPS ex-ENPALS obbligatoria (richiesta dall\'organizzatore)'},
+      {d:'red', t:'Contributi 33% + 1,28% sul lordo, con trattenuta 9,19% a carico del tecnico'},
+      {d:'red', t:'Flusso UNIEMENS entro il 16 del mese successivo all\'evento'},
+      {d:'red', t:'Assicurazione INAIL obbligatoria'},
+    ];
+  } else if (eta === 'under18') {
+    esente = true;
+    motivazione = 'La minore età è causa autonoma di esenzione ai sensi dell\'art. 1 comma 188 L. 296/2006, indipendentemente dal compenso e da altre casse previdenziali. Si applicano le norme specifiche di tutela dei lavoratori minori.';
+    adempimenti = [
+      {d:'green', t:'Nessun obbligo contributivo ENPALS/INPS spettacolo'},
+      {d:'amber', t:'Dichiarazione di esenzione scritta da consegnare all\'organizzatore'},
+      {d:'amber', t:'Verificare la normativa di tutela dei lavoratori minorenni (orario, visita medica)'},
+    ];
+  } else if (eta === 'over65') {
+    esente = reddito === 'sotto';
+    parziale = reddito === 'incerto';
+    if (esente) {
+      motivazione = 'L\'artista pensionato over 65 con compenso annuo da spettacolo entro i 5.000 € lordi è esente ai sensi del comma 188. Entrambi i requisiti — anagrafico e reddituale — devono ricorrere congiuntamente.';
+      adempimenti = [{d:'green',t:'Nessun obbligo ENPALS (compenso annuo ≤ 5.000 €)'},{d:'amber',t:'Dichiarazione di esenzione scritta obbligatoria'},{d:'amber',t:'Monitorare il totale compensi durante l\'anno solare'}];
+    } else if (parziale) {
+      motivazione = 'Il requisito anagrafico (over 65 pensionato) è soddisfatto, ma la soglia reddituale di 5.000 € annui deve essere verificata. L\'esenzione vale solo se entrambi i requisiti ricorrono insieme.';
+      adempimenti = [{d:'amber',t:'Verificare il totale compensi annui da attività artistica'},{d:'amber',t:'Se sotto 5.000 €: rilasciare dichiarazione di esenzione'},{d:'red',t:'Se sopra 5.000 €: agibilità ENPALS obbligatoria'}];
+    } else {
+      motivazione = 'Pur avendo i requisiti anagrafici, il superamento della soglia di 5.000 € annui fa decadere l\'esenzione. L\'obbligo contributivo si applica sull\'intero compenso.';
+      adempimenti = [{d:'red',t:'Agibilità ENPALS obbligatoria'},{d:'red',t:'Contributi dovuti sull\'intero compenso lordo'}];
+    }
+  } else if (eta === '18_25') {
+    esente = reddito === 'sotto';
+    parziale = reddito === 'incerto';
+    if (esente) {
+      motivazione = 'Lo studente tra 18 e 25 anni con compenso annuo da spettacolo entro i 5.000 € lordi è esente ai sensi del comma 188. Conservare documentazione dello status di studente (certificato di iscrizione).';
+      adempimenti = [{d:'green',t:'Nessun obbligo ENPALS (compenso annuo ≤ 5.000 €)'},{d:'amber',t:'Dichiarazione di esenzione + copia certificato di iscrizione scolastica/universitaria'},{d:'amber',t:'Monitorare il totale compensi annui da attività artistica'}];
+    } else if (parziale) {
+      motivazione = 'Il requisito anagrafico/studente è soddisfatto, ma la soglia dei 5.000 € annui deve essere verificata prima di procedere con l\'esenzione.';
+      adempimenti = [{d:'amber',t:'Verificare il totale compensi annui'},{d:'red',t:'Se sopra 5.000 €: agibilità ENPALS obbligatoria'}];
+    } else {
+      motivazione = 'Nonostante il requisito anagrafico da studente, il superamento dei 5.000 € annui fa scattare l\'obbligo contributivo pieno.';
+      adempimenti = [{d:'red',t:'Agibilità ENPALS obbligatoria'},{d:'red',t:'Contributi dovuti sull\'intero compenso lordo'}];
+    }
+  } else {
+    if (altra_cassa === 'si' && reddito === 'sotto') {
+      esente = true;
+      motivazione = 'L\'artista con altra copertura previdenziale attiva (INPS ordinario, INPDAP, cassa professionale) e compenso annuo da spettacolo entro i 5.000 € lordi è esente ai sensi dell\'art. 1 comma 188 L. 296/2006. Entrambi i requisiti devono ricorrere congiuntamente.';
+      adempimenti = [{d:'green',t:'Nessun obbligo contributivo ENPALS'},{d:'amber',t:'Dichiarazione di esenzione scritta obbligatoria da consegnare all\'organizzatore'},{d:'amber',t:'Monitorare il totale compensi da spettacolo durante l\'anno solare'}];
+    } else if (altra_cassa === 'si' && reddito === 'incerto') {
+      parziale = true;
+      motivazione = 'Il requisito soggettivo (altra cassa previdenziale attiva) è soddisfatto, ma la soglia reddituale dei 5.000 € annui deve essere verificata. Entrambi i requisiti devono ricorrere congiuntamente per accedere all\'esenzione.';
+      adempimenti = [{d:'amber',t:'Verificare il totale compensi da spettacolo ricevuti nell\'anno solare'},{d:'amber',t:'Se sotto 5.000 €: rilasciare dichiarazione di esenzione al committente'},{d:'red',t:'Se sopra 5.000 €: agibilità ENPALS obbligatoria'}];
+    } else {
+      motivazione = altra_cassa === 'no'
+        ? 'L\'artista senza altra cassa previdenziale attiva non può beneficiare dell\'esenzione ex comma 188, indipendentemente dall\'importo del compenso annuo.'
+        : 'Il superamento della soglia di 5.000 € annui fa decadere l\'esenzione, anche in presenza di altra cassa previdenziale attiva.';
+      adempimenti = [{d:'red',t:'Agibilità INPS ex-ENPALS obbligatoria prima dell\'esibizione'},{d:'red',t:'Contributi FPLS: 33% + 1,28% (di cui 9,19% a carico del lavoratore)'},{d:'red',t:'Flusso UNIEMENS entro il 16 del mese successivo'},{d:'red',t:'Copertura INAIL obbligatoria'}];
+    }
+  }
+
+  if (dichiarazione === 'no' && esente) {
+    warn = `<div class="warn-box">Attenzione: la dichiarazione di esenzione non risulta ancora consegnata. Deve essere firmata e consegnata all'organizzatore prima dell'inizio dell'evento. In sua assenza, la posizione è formalmente irregolare.</div>`;
+  }
+
+  const badgeClass = esente ? 'badge-esente' : parziale ? 'badge-verifica' : 'badge-obbligo';
+  const badgeText = esente ? '✓ Esente ENPALS' : parziale ? '⚠ Verifica necessaria' : '✗ Obbligo contributivo';
+  const titleText = esente ? 'Esenzione confermata' : parziale ? 'Posizione da verificare' : 'Obbligo contributivo pieno';
+
+  const labels = {
+    tipo: {musicista:'Musicista/cantante', tecnico:'Tecnico', direttore:'Direttore d\'orchestra', altro:'Altra figura'},
+    altra_cassa: {si:'Sì', no:'No', '-':'—'},
+    reddito: {sotto:'≤ 5.000 € annui', sopra:'> 5.000 € annui', incerto:'Da verificare', '-':'—'},
+    eta: {under18:'Minorenne', '18_25':'18–25 anni (studente)', '25_65':'26–64 anni', over65:'Over 65 (pensionato)', '-':'—'},
+  };
+
+  const rows = [
+    ['Tipo prestazione', labels.tipo[tipo]||tipo],
+    ['Altra cassa previdenziale', labels.altra_cassa[altra_cassa]||altra_cassa],
+    ['Compenso annuo da spettacolo', labels.reddito[reddito]||reddito],
+    ['Fascia anagrafica', labels.eta[eta]||eta],
+  ].map(([k,v]) => `<div class="summary-row"><span class="summary-key">${k}</span><span class="summary-val">${v}</span></div>`).join('');
+
+  const adHtml = adempimenti.map(a => `<div class="adempimento"><div class="adot adot-${a.d}"></div><div>${a.t}</div></div>`).join('');
+
+  return `
+    <div class="result-card">
+      <div class="result-badge ${badgeClass}">${badgeText}</div>
+      <div class="result-title">${titleText}</div>
+      <div class="result-body">${motivazione}</div>
+      ${warn}
+      <hr class="divider">
+      <div class="summary-title">Riepilogo risposte</div>
+      ${rows}
+    </div>
+    <div class="result-card">
+      <div class="summary-title">Adempimenti richiesti</div>
+      ${adHtml}
+    </div>
+  `;
+}
+
+function restart() {
+  Object.keys(A).forEach(k => delete A[k]);
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.choice').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.btn-primary').forEach(b => b.disabled = true);
+  document.getElementById('s0').classList.add('active');
+  document.getElementById('prog').style.width = '0%';
+  document.getElementById('prog-label').textContent = '0 / 5';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
